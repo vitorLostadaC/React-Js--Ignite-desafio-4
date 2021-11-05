@@ -1,14 +1,29 @@
-import { Component, createRef } from "react";
+import { Component, createRef, FormEvent } from "react";
 import { FiCheckSquare } from "react-icons/fi";
 
 import { Form } from "./styles";
 import Modal from "../Modal";
 import Input from "../Input";
 
-function ModalAddFood({ isOpen, setIsOpen, handleAddFood }) {
+interface Food {
+  image: string;
+  name: string;
+  price: string;
+  description: string;
+  available: boolean;
+  id: number;
+}
+
+interface ModalAddFoodProps {
+  isOpen: boolean;
+  setIsOpen: () => void;
+  handleAddFood: (food: Food) => Promise<void>;
+}
+
+function ModalAddFood({ isOpen, setIsOpen, handleAddFood }: ModalAddFoodProps) {
   const formRef = createRef();
 
-  const handleSubmit = async (data) => {
+  const handleSubmit = async (data: Food) => {
     handleAddFood(data);
     setIsOpen();
   };

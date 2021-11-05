@@ -2,14 +2,23 @@ import { useState, useEffect } from "react";
 
 import Header from "../../components/Header";
 import api from "../../services/api";
-import Food from "../../components/Food";
+import FoodComponent from "../../components/Food";
 import ModalAddFood from "../../components/ModalAddFood";
 import ModalEditFood from "../../components/ModalEditFood";
 import { FoodsContainer } from "./styles";
 
+interface Food {
+  image: string;
+  name: string;
+  price: string;
+  description: string;
+  available: boolean;
+  id: number;
+}
+
 function Dashboard() {
-  const [foods, setFoods] = useState([]);
-  const [editingFood, setEditingFood] = useState({});
+  const [foods, setFoods] = useState<Food[]>([]);
+  const [editingFood, setEditingFood] = useState<Food>({} as Food);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
 
@@ -23,7 +32,7 @@ function Dashboard() {
     generateData();
   }, []);
 
-  const handleAddFood = async (food) => {
+  const handleAddFood = async (food: Food) => {
     try {
       const response = await api.post("/foods", {
         ...food,
@@ -36,7 +45,7 @@ function Dashboard() {
     }
   };
 
-  const handleUpdateFood = async (food) => {
+  const handleUpdateFood = async (food: Food) => {
     try {
       const foodUpdated = await api.put(`/foods/${editingFood.id}`, {
         ...editingFood,
@@ -53,7 +62,7 @@ function Dashboard() {
     }
   };
 
-  const handleDeleteFood = async (id) => {
+  const handleDeleteFood = async (id: number) => {
     await api.delete(`/foods/${id}`);
 
     const foodsFiltered = foods.filter((food) => food.id !== id);
@@ -69,7 +78,7 @@ function Dashboard() {
     setEditModalOpen(!editModalOpen);
   };
 
-  const handleEditFood = (food) => {
+  const handleEditFood = (food: Food) => {
     setEditingFood(food);
     setEditModalOpen(true);
   };
@@ -92,7 +101,7 @@ function Dashboard() {
       <FoodsContainer data-testid="foods-list">
         {foods &&
           foods.map((food) => (
-            <Food
+            <FoodComponent
               key={food.id}
               food={food}
               handleDelete={handleDeleteFood}
